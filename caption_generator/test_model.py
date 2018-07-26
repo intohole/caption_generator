@@ -6,7 +6,7 @@ import caption_generator
 import numpy as np
 from keras.preprocessing import sequence
 
-cg = caption_generator.CaptionGenerator()
+cg = caption_generator.CaptionGenerator.load('caption_generator.model')
 
 
 def process_caption(caption):
@@ -23,7 +23,7 @@ def process_caption(caption):
 def get_best_caption(captions):
     captions.sort(key=lambda l: l[1])
     best_caption = captions[-1][0]
-    return " ".join([cg.index_word[index] for index in best_caption])
+    return " ".join([cg.dictionary[index] for index in best_caption])
 
 
 def get_all_captions(captions):
@@ -36,7 +36,7 @@ def get_all_captions(captions):
 
 
 def generate_captions(model, image, beam_size):
-    start = [cg.word_index['<start>']]
+    start = [cg.dictionary.token2id['<start>']]
     captions = [[start, 0.0]]
     while (len(captions[0][0]) < cg.max_cap_len):
         temp_captions = []
@@ -68,8 +68,8 @@ def test_model(weight, img_name, beam_size=3):
 
 # return [process_caption(caption[0]) for caption in get_all_captions(captions)]
 
-def bleu_score(hypotheses, references):
-    return nltk.translate.bleu_score.corpus_bleu(references, hypotheses)
+# def bleu_score(hypotheses, references):
+#     return nltk.translate.bleu_score.corpus_bleu(references, hypotheses)
 
 
 def test_model_on_images(weight, img_dir, beam_size=3):
@@ -113,13 +113,14 @@ def test_model_on_images(weight, img_dir, beam_size=3):
         reference = image_captions_pair[img_name]
         hypotheses.append(hypothesis)
         references.append(reference)
+    return
 
-    return bleu_score(hypotheses, references)
+    # return bleu_score(hypotheses, references)
 
 
 if __name__ == '__main__':
-    weight = 'weights-improvement-48.hdf5'
-    test_image = '3155451946_c0862c70cb.jpg'
+    weight = 'weights-improvement-01.hdf5'
+    test_image = 'test.jpg'
     test_img_dir = 'Flickr8k_text/Flickr_8k.testImages.txt'
-    # print test_model(weight, test_image)
-    print(test_model_on_images(weight, test_img_dir, beam_size=3))
+    print(test_model(weight, test_image))
+    # print(test_model_on_images(weight, test_img_dir, beam_size=3))

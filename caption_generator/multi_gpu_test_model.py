@@ -49,7 +49,7 @@ def generate_captions(model, image, beam_size):
             next_words = np.argsort(next_words_pred)[-beam_size:]
             for word in next_words:
                 new_partial_caption, new_partial_caption_prob = caption[
-                    0][:], caption[1]
+                                                                    0][:], caption[1]
                 new_partial_caption.append(word)
                 new_partial_caption_prob += next_words_pred[word]
                 temp_captions.append(
@@ -75,8 +75,8 @@ def test_model(weight, img_name, beam_size=3):
 # return [process_caption(caption[0]) for caption in get_all_captions(captions)]
 
 
-def bleu_score(hypotheses, references):
-    return nltk.translate.bleu_score.corpus_bleu(references, hypotheses)
+# def bleu_score(hypotheses, references):
+#     return nltk.translate.bleu_score.corpus_bleu(references, hypotheses)
 
 
 def test_model_on_images(weight, img_dir, beam_size=3):
@@ -120,9 +120,7 @@ def test_model_on_images(weight, img_dir, beam_size=3):
         reference = image_captions_pair[img_name]
         hypotheses.append(hypothesis)
         references.append(reference)
-
-    return bleu_score(hypotheses, references)
-
+    return
 
 if __name__ == '__main__':
     weight = 'weights-improvement-48.hdf5'

@@ -1,5 +1,4 @@
-#coding=utf-8
-
+# coding=utf-8
 
 
 import pickle
@@ -31,7 +30,7 @@ def load_encoding_model():
 def get_encoding(model, img):
     global counter
     counter += 1
-    image = load_image(os.path.join(CUR_DIR,'../Flicker8k_Dataset/%s' % img))
+    image = load_image(os.path.join(CUR_DIR, '../Flicker8k_Dataset/%s' % img))
     pred = model.predict(image)
     pred = np.reshape(pred, pred.shape[1])
     print("Encoding image: " + str(counter))
@@ -40,15 +39,15 @@ def get_encoding(model, img):
 
 
 def prepare_dataset(no_imgs=-1):
-    with open(os.path.join(CUR_DIR,'../Flickr8k_text/Flickr_8k.trainImages.txt')) as f:
+    with open(os.path.join(CUR_DIR, '../Flickr8k_text/Flickr_8k.trainImages.txt')) as f:
         train_imgs = [line.strip() for line in f.readlines()]
-    with open(os.path.join(CUR_DIR,'../Flickr8k_text/Flickr_8k.testImages.txt')) as f:
+    with open(os.path.join(CUR_DIR, '../Flickr8k_text/Flickr_8k.testImages.txt')) as f:
         test_imgs = [line.strip() for line in f.readlines()]
-    f_train_dataset = open(os.path.join(CUR_DIR,'../Flickr8k_text/flickr_8k_train_dataset.txt'), 'w')
+    f_train_dataset = open(os.path.join(CUR_DIR, '../Flickr8k_text/flickr_8k_train_dataset.txt'), 'w')
     f_train_dataset.write("image_id\tcaptions\n")
-    f_test_dataset = open(os.path.join(CUR_DIR,'../Flickr8k_text/flickr_8k_test_dataset.txt'), 'w')
+    f_test_dataset = open(os.path.join(CUR_DIR, '../Flickr8k_text/flickr_8k_test_dataset.txt'), 'w')
     f_test_dataset.write("image_id\tcaptions\n")
-    with open(os.path.join(CUR_DIR,'../Flickr8k_text/Flickr8k.token.txt')) as f:
+    with open(os.path.join(CUR_DIR, '../Flickr8k_text/Flickr8k.token.txt')) as f:
         captions = [line.strip() for line in f.readlines()]
     data = {}
     for row in captions:
@@ -67,7 +66,7 @@ def prepare_dataset(no_imgs=-1):
         encoded_images[img] = get_encoding(encoding_model, img)
         for capt in data[img]:
             caption = "<start> " + capt + " <end>"
-            f_train_dataset.write("%s\t%s\n".encode('utf-8').decode('utf-8') % (img,caption))
+            f_train_dataset.write("%s\t%s\n".encode('utf-8').decode('utf-8') % (img, caption))
             f_train_dataset.flush()
             c_train += 1
     f_train_dataset.close()
@@ -84,6 +83,7 @@ def prepare_dataset(no_imgs=-1):
     with open("encoded_images.p", "wb") as pickle_f:
         pickle.dump(encoded_images, pickle_f)
     return [c_train, c_test]
+
 
 enumerate
 if __name__ == '__main__':
